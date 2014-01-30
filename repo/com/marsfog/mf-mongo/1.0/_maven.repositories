@@ -1,0 +1,6 @@
+#NOTE: This is an internal implementation file, its format can be changed without prior notice.
+#Thu Jan 30 11:33:45 PST 2014
+mf-mongo-1.0.jar>=
+mf-mongo-1.0-sources.jar>=
+mf-mongo-1.0.pom>=
+mf-mongo-1.0-test-sources.jar>=

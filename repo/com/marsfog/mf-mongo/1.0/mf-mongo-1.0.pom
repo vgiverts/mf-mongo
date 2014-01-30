@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.marsfog</groupId>
+    <artifactId>mf-mongo</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+    <name>MarsFog MongoDB Util</name>
+
+    <properties>
+        <scala.version>2.10.3</scala.version>
+        <jdk.version>7</jdk.version>
+        <character.encoding>UTF-8</character.encoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>scala-tools.releases</id>
+            <name>Scala-Tools Dependencies Repository for Releases</name>
+            <url>http://scala-tools.org/repo-releases</url>
+        </repository>
+        <repository>
+            <id>mf-reflect</id>
+            <url>https://github.com/vgiverts/mf-reflect/raw/master/repo</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>scala-tools.releases</id>
+            <name>Scala-Tools Plugins Repository for Releases</name>
+            <url>http://scala-tools.org/repo-releases</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.mongodb</groupId>
+        	<artifactId>casbah-core_2.10</artifactId>
+        	<version>2.6.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.marsfog</groupId>
+            <artifactId>mf-reflect</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.scala-tools.testing</groupId>
+        	<artifactId>specs_2.10</artifactId>
+        	<version>1.6.9</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
+        <plugins>
+            <!-- COMPILE -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <compilerVersion>${jdk.version}</compilerVersion>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <encoding>${character.encoding}</encoding>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+
+
+            <!-- SCALA -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.1.6</version>
+                <configuration>
+                    <charset>${character.encoding}</charset>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <args>
+                        <arg>-encoding</arg>
+                        <arg>${character.encoding}</arg>
+                        <arg>-target:jvm-1.6</arg>
+                        <arg>-unchecked</arg>
+                        <arg>-deprecation</arg>
+                        <arg>-feature</arg>
+                        <!-- <arg>-explaintypes</arg> -->
+                        <!-- <arg>-verbose</arg> -->
+                        <!-- <arg>-optimise</arg> -->
+                        <!-- <arg>-language:implicitConversions</arg> -->
+                    </args>
+                    <!-- <recompileMode>incremental</recompileMode> -->
+                    <!-- <useZincServer>true</useZincServer> -->
+                    <javacArgs>
+                        <javacArg>-Xlint:unchecked</javacArg>
+                        <javacArg>-Xlint:deprecation</javacArg>
+                    </javacArgs>
+                    <jvmArgs>
+                        <jvmArg>-Xmx512m</jvmArg>
+                    </jvmArgs>
+                    <launchers>
+                        <launcher>
+                            <id>scalatest</id>
+                            <mainClass>org.scalatest.tools.Runner</mainClass>
+                            <args>
+                                <arg>-Q</arg>
+                            </args>
+                            <jvmArgs>
+                                <jvmArg>-Xmx512m</jvmArg>
+                            </jvmArgs>
+                        </launcher>
+                    </launchers>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.scala-lang</groupId>
+                        <artifactId>scala-compiler</artifactId>
+                        <version>${scala.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+
+            <!-- SCALA TEST -->
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-surefire-plugin</artifactId>-->
+            <!--<version>2.16</version>-->
+            <!--<configuration>-->
+            <!--&lt;!&ndash; disable surefire as we use scalatest &ndash;&gt;-->
+            <!--<skipTests>true</skipTests>-->
+            <!--<excludes>-->
+            <!--<exclude>**/*IntegrationTest.*</exclude>-->
+            <!--</excludes>-->
+            <!--</configuration>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-failsafe-plugin</artifactId>-->
+            <!--<version>2.16</version>-->
+            <!--<configuration>-->
+            <!--&lt;!&ndash; disable surefire as we use scalatest &ndash;&gt;-->
+            <!--<skipTests>true</skipTests>-->
+            <!--<includes>-->
+            <!--<include>**/*IntegrationTest.*</include>-->
+            <!--</includes>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>failsafe-integration-tests</id>-->
+            <!--<phase>integration-test</phase>-->
+            <!--<goals>-->
+            <!--<goal>integration-test</goal>-->
+            <!--<goal>verify</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+            <!--<groupId>org.scalatest</groupId>-->
+            <!--<artifactId>scalatest-maven-plugin</artifactId>-->
+            <!--<version>1.0-M4-SNAP1</version>-->
+            <!--<configuration>-->
+            <!--<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>-->
+            <!--<junitxml>.</junitxml>-->
+            <!--<stdout>F</stdout>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>scalatest-test</id>-->
+            <!--<phase>test</phase>-->
+            <!--<goals>-->
+            <!--<goal>test</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--</plugin>-->
+
+
+            <!-- JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>${character.encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                            <goal>test-jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <!-- DEPLOY -->
+            <plugin>
+                <!-- explicitly define maven-deploy-plugin after other plugins -->
+                <!-- to force execution order -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
